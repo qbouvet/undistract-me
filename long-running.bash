@@ -37,25 +37,27 @@ function __udm_callback_with_outdated_bashpreexec() {
 }
 # Case 1: find bash-preexec in common installation locations
 __udm_register_callbacks=__udm_callback_with_mainline_bashpreexec
-if [ -f '/usr/share/bash-preexec/bash-preexec.sh' ]; then 
-  __udm_bash_preexec_path='/usr/share/bash-preexec/bash-preexec.sh'
-elif [ -f '~/.bash-preexec.sh' ]; then 
-  __udm_bash_preexec_path='~/.bash-preexec.sh'
+if [ -f /usr/share/bash-preexec/bash-preexec.sh ]; then 
+  __udm_bash_preexec_path=/usr/share/bash-preexec/bash-preexec.sh
+elif [ -f ~/.bash-preexec.sh ]; then 
+  __udm_bash_preexec_path=~/.bash-preexec.sh
 # Case 2: Fallback: use outdated, shipped-along bash-preexec
 else 
   __udm_register_callbacks=__udm_callback_with_outdated_bashpreexec
   # The pre-exec hook functionality is in a separate branch.
   __udm_bash_preexec_path="$LONG_RUNNING_PREEXEC_LOCATION"
   if [ -z "$__udm_bash_preexec_path" ]; then
-    __udm_bash_preexec_path="/usr/share/undistract-me/preexec.bash"
+    __udm_bash_preexec_path=/usr/share/undistract-me/preexec.bash
   fi
   if [ ! -f "$__udm_bash_preexec_path" ]; then
-    __udm_bash_preexec_path="$( dirname "${BASH_SOURCE[0]}" )/preexec.bash"
+    __udm_bash_preexec_path=$( dirname "${BASH_SOURCE[0]}" )/preexec.bash
   fi
   if ! [ -f "$__udm_bash_preexec_path" ]; then
     echo "Could not find preexec.bash"
   fi  
 fi
+
+#echo Using $__udm_bash_preexec_path
 
 
 function notify_when_long_running_commands_finish_install() {
